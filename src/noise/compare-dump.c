@@ -160,6 +160,8 @@ void main() {
 
     int num_generators = sizeof(generators) / sizeof(generator_t);
 
+    int num_generators_remaining = num_generators;
+
     int generator_active[sizeof(generators) / sizeof(generator_t)];
 
     int generator_index, position, matches, value, byte, generated_byte;
@@ -169,7 +171,8 @@ void main() {
     }
 
     position = 0;
-    while ((matches = scanf("%d\n", &value)) >= 0) {
+    while (num_generators_remaining > 0
+            && (matches = scanf("%d\n", &value)) >= 0) {
         if (matches == 0) {
             getchar();
         } else {
@@ -181,6 +184,7 @@ void main() {
                         generated_byte = generators[generator_index]();
                         if (generated_byte != byte) {
                             generator_active[generator_index] = 0;
+                            --num_generators_remaining;
                             printf("Generator %d didn't match at position %d: source: %d, generated: %d\n",
                                     generator_index, position, byte, generated_byte);
                         }
@@ -188,13 +192,18 @@ void main() {
                 }
 
                 ++position;
-            } while (position % 3 != 0);
+            } while (num_generators_remaining > 0
+                    && position % 3 != 0);
         }
     }
 
-    for (generator_index=0; generator_index<num_generators; ++generator_index) {
-        if (generator_active[generator_index]) {
-            printf("Generator %d matched the sequence of %d bytes!\n", generator_index, position);
+    if (num_generators_remaining > 0) {
+        for (generator_index=0; generator_index<num_generators; ++generator_index) {
+            if (generator_active[generator_index]) {
+                printf("Generator %d matched the sequence of %d bytes!\n", generator_index, position);
+            }
         }
+    } else {
+        printf("After %d bytes, no generators matched.\n", position);
     }
 }
