@@ -1,0 +1,7 @@
+-cp src
+-swf-version 9
+-swf noise.swf
+-main noise.Main
+-D haxe3
+-D fdb
+-debug
