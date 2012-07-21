@@ -110,11 +110,11 @@ int lcg10() {
 
 /* MMIX */
 int lcg11() {
-    static unsigned long a = 6364136223846793005ul;
-    static unsigned long c = 1442695040888963407ul;
-    static unsigned long x = SEED;
+    static unsigned long long a = 6364136223846793005ull;
+    static unsigned long long c = 1442695040888963407ull;
+    static unsigned long long x = SEED;
 
-    x = (a * x + c) & 0xfffffffffffffffful;
+    x = (a * x + c) & 0xffffffffffffffffull;
     return x & 0xff;
 }
 
@@ -130,11 +130,11 @@ int lcg12() {
 
 /* java.util.Random */
 int lcg13() {
-    static unsigned long a = 25214903917ul;
-    static unsigned long c = 11ul;
-    static unsigned long x = SEED;
+    static unsigned long long a = 25214903917ull;
+    static unsigned long long c = 11ull;
+    static unsigned long long x = SEED;
 
-    x = (a * x + c) & 0xfffffffffffful;
+    x = (a * x + c) & 0xffffffffffffull;
     return x >> 16 & 0xff;
 }
 
