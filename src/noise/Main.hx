@@ -6,7 +6,7 @@ import flash.display.MovieClip;
 import haxe.PosInfos;
 
 class Main {
-    static var tests = [test1, test2];
+    static var tests = [test1, test2, test3];
 
     static var i = 0;
 
@@ -71,5 +71,35 @@ class Main {
         }
 
         trace("Noise wraps");
+    }
+
+    static function test3() {
+        var bitmap1 = new BitmapData(256, 256);
+        var bitmap2 = new BitmapData(bitmap1.width, bitmap1.height);
+        var bitmap3 = new BitmapData(bitmap1.width, bitmap1.height);
+        var bitmap4 = new BitmapData(bitmap1.width, bitmap1.height);
+
+        bitmap1.noise(3, 0, 255, 15);
+        bitmap2.noise(3, 0, 255, 7);
+        bitmap3.noise(3, 0, 255, 3);
+        bitmap4.noise(3, 0, 255, 1);
+
+        for (y in 0...bitmap1.height) {
+            for (x in 0...bitmap1.width) {
+                var v1 = Std.int(bitmap1.getPixel32(x, y));
+                var v2 = Std.int(bitmap2.getPixel(x, y));
+                var v3 = Std.int(bitmap3.getPixel(x, y));
+                var v4 = Std.int(bitmap4.getPixel(x, y));
+
+                if (v2 != v1 & 0xffffff
+                        || v3 != v1 & 0xffff00
+                        || v4 != v1 & 0xff0000) {
+                    trace("Noise channels flag does NOT simply mask ARGB noise");
+                    return;
+                }
+            }
+        }
+
+        trace("Noise channels flag simply masks ARGB noise");
     }
 }
