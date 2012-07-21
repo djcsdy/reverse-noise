@@ -4,6 +4,8 @@ import flash.geom.Rectangle;
 import flash.display.BitmapData;
 
 class Exporter {
+    static inline var SEED = 3;
+
     static inline var WIDTH = 16384;
     static inline var HEIGHT = 16384;
 
@@ -16,7 +18,7 @@ class Exporter {
 
     static function main() {
         noise = new flash.display.BitmapData(WIDTH, HEIGHT);
-        noise.noise(3, 0, 255, 7);
+        noise.noise(SEED, 0, 255, 7);
 
         flash.Lib.current.stage.addEventListener(flash.events.Event.ENTER_FRAME, exportNoise);
     }
