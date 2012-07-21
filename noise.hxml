@@ -5,3 +5,9 @@
 -D haxe3
 -D fdb
 -debug
+--next
+
+-cp src
+-swf-version 11
+-swf exporter.swf
+-main noise.Exporter
