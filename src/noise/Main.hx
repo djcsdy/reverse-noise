@@ -1,5 +1,6 @@
 package noise;
 
+import flash.geom.Rectangle;
 import flash.display.BitmapData;
 import flash.events.Event;
 import flash.display.MovieClip;
@@ -109,50 +110,61 @@ class Main {
         var bitmap3 = new BitmapData(bitmap1.width, bitmap1.height);
         var bitmap4 = new BitmapData(bitmap1.width, bitmap1.height);
 
-        bitmap1.noise(4, 0, 255, 15);
-        bitmap2.noise(4, 0, 255, 7);
-        bitmap3.noise(4, 0, 255, 3);
-        bitmap4.noise(4, 0, 255, 1);
+        for (seed in 4...14) {
+            bitmap1.noise(seed, 0, 255, 15);
+            bitmap2.noise(seed, 0, 255, 7);
+            bitmap3.noise(seed, 0, 255, 3);
+            bitmap4.noise(seed, 0, 255, 1);
 
-        var v11 = Std.int(bitmap1.getPixel32(0, 0));
-        var v12 = Std.int(bitmap1.getPixel32(1, 0));
-        var v21 = Std.int(bitmap2.getPixel32(0, 0));
-        var v22 = Std.int(bitmap2.getPixel32(1, 0));
-        var v31 = Std.int(bitmap3.getPixel32(0, 0));
-        var v32 = Std.int(bitmap3.getPixel32(1, 0));
-        var v41 = Std.int(bitmap4.getPixel32(0, 0));
-        var v42 = Std.int(bitmap4.getPixel32(1, 0));
+            var v11 = Std.int(bitmap1.getPixel32(0, 0));
+            var v12 = Std.int(bitmap1.getPixel32(1, 0));
+            var v21 = Std.int(bitmap2.getPixel32(0, 0));
+            var v22 = Std.int(bitmap2.getPixel32(1, 0));
+            var v31 = Std.int(bitmap3.getPixel32(0, 0));
+            var v32 = Std.int(bitmap3.getPixel32(1, 0));
+            var v41 = Std.int(bitmap4.getPixel32(0, 0));
+            var v42 = Std.int(bitmap4.getPixel32(1, 0));
 
-        var b1 = v11 >> 16 & 0xff;
-        var b2 = v11 >> 8 & 0xff;
-        var b3 = v11 & 0xff;
-        var b4 = v11 >> 24 & 0xff;
-        var b5 = v12 >> 16 & 0xff;
-        var b6 = v12 >> 8 & 0xff;
+            var b1 = v21 >> 16 & 0xff;
+            var b2 = v21 >> 8 & 0xff;
+            var b3 = v21 & 0xff;
+            var b4 = v22 >> 16 & 0xff;
+            var b5 = v22 >> 8 & 0xff;
+            var b6 = v22 & 0xff;
 
-        for (v in [v11, v12, v21, v22, v31, v32, v41, v42]) {
-            trace(StringTools.hex(v, 8));
-        }
+            /*for (v in [v11, v12, v21, v22, v31, v32, v41, v42]) {
+                trace(StringTools.hex(v, 8));
+            }
 
-        for (b in [b1,b2,b3,b4,b5,b6]) {
-            trace(StringTools.hex(b, 2));
-        }
+            for (b in [b1,b2,b3,b4,b5,b6]) {
+                trace(StringTools.hex(b, 2));
+            }*/
 
-        if (v21 >> 16 & 0xff == b1
-                && v21 >> 8 & 0xff == b2
-                && v21 & 0xff == b3
-                && v22 >> 16 & 0xff == b4
-                && v22 >> 8 & 0xff == b5
-                && v22 & 0xff == b6
-                && v31 >> 16 & 0xff == b1
-                && v31 >> 8 & 0xff == b2
-                && v32 >> 16 & 0xff == b3
-                && v32 >> 8 & 0xff == b4
-                && v41 >> 16 & 0xff == b1
-                && v42 >> 16 & 0xff == b2) {
-            trace("Noise bytes are fetched as required in the order R, G, B, A");
-        } else {
-            trace("Noise bytes are NOT fetched in the order R, G, B, A");
+            var a11 = v11 >> 24 & 0xff;
+            var r11 = v11 >> 16 & 0xff;
+            var g11 = v11 >> 8 & 0xff;
+            var b11 = v11 & 0xff;
+
+            var a12 = v12 >> 24 & 0xff;
+            var r12 = v12 >> 16 & 0xff;
+            var g12 = v12 >> 8 & 0xff;
+
+            if (r11 == Math.round(Math.round(b1 * a11 / 0xff) * 0xff / a11)
+                    && g11 == Math.round(Math.round(b2 * a11 / 0xff) * 0xff / a11)
+                    && b11 == Math.round(Math.round(b3 * a11 / 0xff) * 0xff / a11)
+                    && a11 == b4
+                    && r12 == Math.round(Math.round(b5 * a12 / 0xff) * 0xff / a12)
+                    && g12 == Math.round(Math.round(b6 * a12 / 0xff) * 0xff / a12)
+                    && v31 >> 16 & 0xff == b1
+                    && v31 >> 8 & 0xff == b2
+                    && v32 >> 16 & 0xff == b3
+                    && v32 >> 8 & 0xff == b4
+                    && v41 >> 16 & 0xff == b1
+                    && v42 >> 16 & 0xff == b2) {
+                trace("Noise bytes are fetched as required in the order R, G, B, A");
+            } else {
+                trace("Noise bytes are NOT fetched in the order R, G, B, A");
+            }
         }
     }
 }
