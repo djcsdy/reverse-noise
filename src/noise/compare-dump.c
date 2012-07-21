@@ -97,7 +97,7 @@ int lcg9() {
     return x & 0xff;
 }
 
-/* CarbonLib */
+/* MINSTD */
 int lcg10() {
     static unsigned int m = (1 << 31) - 1;
     static unsigned int a = 16807;
