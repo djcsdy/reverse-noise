@@ -97,19 +97,34 @@ int lcg9() {
     return x & 0xff;
 }
 
-/* MINSTD */
-int lcg10() {
-    static unsigned int m = (1 << 31) - 1;
+/* MINSTD
+ * Implementation based on code by Ray Gardner.  */
+long lcg10()
+{
     static unsigned int a = 16807;
-    static unsigned int c = 0;
+    static unsigned int m = (1 << 31) - 1;
+
     static unsigned int x = SEED;
+    unsigned int lo, hi;
 
-    static unsigned int hd = (1ull << 31) / 16807;
+    lo = a * (x & 0xffff);
+    hi = a * (x >> 16);
+    lo += (hi & 0x7fff) << 16;
 
-    int l = (a * x) & 0x7fffffff;
-    int h = x / hd;
+    if (lo > m) {
+        lo &= m;
+        ++lo;
+    }
 
-    x = (a * x + c + h) % m;
+    lo += hi >> 15;
+
+    if (lo > m) {
+        lo &= m;
+        ++lo;
+    }
+
+    x = lo;
+
     return x & 0xff;
 }
 
