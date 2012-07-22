@@ -42,7 +42,7 @@ int lcg4() {
     static unsigned int c = 12345;
     static unsigned int x = SEED;
 
-    x = (a * x + c) & 0x8fffffffu;
+    x = (a * x + c) & 0x7fffffffu;
     return x & 0xff;
 }
 
@@ -52,7 +52,7 @@ int lcg5() {
     static unsigned int c = 12345;
     static unsigned int x = SEED;
 
-    x = (a * x + c) & 0x8fffffffu;
+    x = (a * x + c) & 0x7fffffffu;
     return x >> 16 & 0xff;
 }
 
@@ -104,7 +104,12 @@ int lcg10() {
     static unsigned int c = 0;
     static unsigned int x = SEED;
 
-    x = (a * x + c) % m;
+    static unsigned int hd = (1ull << 31) / 16807;
+
+    int l = (a * x) & 0x7fffffff;
+    int h = x / hd;
+
+    x = (a * x + c + h) % m;
     return x & 0xff;
 }
 
