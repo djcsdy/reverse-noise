@@ -24,7 +24,7 @@ class NoiseTest extends TestCase {
         super();
     }
 
-    /* Proves that noise generated with a seed of zero will be identical to noise generated with a seed of one
+    /** Proves that noise generated with a seed of zero will be identical to noise generated with a seed of one
      * (all other parameters being equal).
      *
      * The reason for this is that zero is not a useful seed for the Lehmer pseudo-random number generator that
@@ -62,14 +62,14 @@ class NoiseTest extends TestCase {
         }
     }
 
-    /* Proves that Flash generates noise as follows:
+    /** Proves that Flash generates noise as follows:
      *
-     * 1. For each pixel, left-to-right, top-to-bottom:
-     * 2.   For each unmasked channel, in the order R, G, B, A:
-     * 3.     Fetch a random value from the noise generator, modulo reduce it to the range 0...255, and set the
-     *        value of the current pixel-channel to that value.
+     * <ol><li>For each pixel, left-to-right, top-to-bottom:</li>
+     * <li>For each unmasked channel, in the order R, G, B, A:</li>
+     * <li>Fetch a random value from the noise generator, modulo reduce it to the range 0...255, and set the
+     *   value of the current pixel-channel to that value.</li></ol>
      *
-     * Note that Flash stores colours alpha pre-multiplied so, if A < 255, there will be rounding errors in the RGB
+     * Note that Flash stores colours alpha pre-multiplied so, if A &lt; 255, there will be rounding errors in the RGB
      * values. */
     public function testNoiseGeneratorFetchesRandomBytesOnlyForUnmaskedChannelsInTheOrderRGBA() {
         var tmpBitmap = new BitmapData(1, 1);
