@@ -126,4 +126,23 @@ class NoiseTest extends TestCase {
             }
         }
     }
+
+    /** Proves that the Flash noise generator is a MINSTD pseudo-random number generator.
+     *
+     * An example implementation of this generator is std::minstd_rand0 from the C++ standard library. */
+    public function testNoiseGeneratorIsMinstd() {
+        var seed = 38;
+
+        var generator = new MinstdGenerator(seed);
+
+        var bitmap = new BitmapData(256, 256);
+        bitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE);
+
+        for (y in 0...bitmap.height) {
+            for (x in 0...bitmap.width) {
+                var expected = generator.nextValue() & 255;
+                assertEquals(expected, bitmap.getPixel(x, y));
+            }
+        }
+    }
 }
