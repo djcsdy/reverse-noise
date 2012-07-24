@@ -1,4 +1,4 @@
-package noise;
+package reverse_noise;
 
 /** A MINSTD pseudo-random number generator.
  *

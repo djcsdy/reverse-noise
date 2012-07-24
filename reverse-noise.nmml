@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <set name="WIDTH" value="640"/>
+  <set name="HEIGHT" value="480"/>
+
+  <haxedef name="fdb" if="target_flash" />
+
+  <app file="reverse-noise"
+       title="BitmapData.noise()"
+       package="net.noiseinstitute.reverse_noise"
+       version="0"
+       company="Daniel Cassidy"
+       main="reverse_noise.NoiseTest"/>
+
+  <window width="${WIDTH}"
+          height="${HEIGHT}"
+          orientation="landscape"
+          fps="60"
+          background="0xffffff"
+          resizable="true"
+          hardware="false"/>
+
+  <classpath name="src"/>
+
+  <haxelib name="nme"/>
+
+  <ndll name="std"/>
+  <ndll name="nme" haxelib="nme"/>
+</project>

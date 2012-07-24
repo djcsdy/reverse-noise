@@ -1,6 +1,7 @@
 /bin
 *.hxproj
 *.iml
+*.build
 /.idea
 /out
 /noise.swf

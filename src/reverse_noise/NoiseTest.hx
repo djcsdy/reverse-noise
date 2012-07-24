@@ -1,4 +1,4 @@
-package noise;
+package reverse_noise;
 
 import flash.display.BitmapDataChannel;
 import haxe.unit.TestRunner;
