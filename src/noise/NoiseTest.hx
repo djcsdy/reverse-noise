@@ -145,4 +145,27 @@ class NoiseTest extends TestCase {
             }
         }
     }
+
+    /** Proves that noise from the PRNG is modulo-reduced to the requested range. */
+    public function testNoiseIsModuloReducedToTheRequestedRange() {
+        var seed = 389;
+
+        var bitmap = new BitmapData(256, 256);
+
+        for (params in [
+            {low: 0, high: 207},
+            {low: 4, high: 24},
+            {low: 87, high: 255}
+        ]) {
+            bitmap.noise(seed, params.low, params.high, BitmapDataChannel.BLUE);
+            var generator = new MinstdGenerator(seed);
+
+            for (y in 0...bitmap.height) {
+                for (x in 0...bitmap.width) {
+                    var expected = params.low + generator.nextValue() % (params.high-params.low+1);
+                    assertEquals(expected, bitmap.getPixel(x, y));
+                }
+            }
+        }
+    }
 }
