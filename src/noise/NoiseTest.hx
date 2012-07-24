@@ -24,12 +24,26 @@ class NoiseTest extends TestCase {
         super();
     }
 
+    public function testSeedZeroBehavesLikeSeedOne() {
+        var bitmap1 = new BitmapData(256, 256);
+        var bitmap2 = new BitmapData(256, 256);
+
+        bitmap1.noise(0);
+        bitmap2.noise(1);
+
+        for (y in 0...bitmap1.height) {
+            for (x in 0...bitmap1.width) {
+                assertEquals(bitmap1.getPixel(x, y), bitmap2.getPixel(x, y));
+            }
+        }
+    }
+
     public function testNoiseWrapsLeftToRightTopToBottom() {
         var bitmap1 = new BitmapData(256, 1024);
         var bitmap2 = new BitmapData(512, 512);
 
-        bitmap1.noise(2);
-        bitmap2.noise(2);
+        bitmap1.noise(1);
+        bitmap2.noise(1);
 
         for (i in 0...(bitmap1.width*bitmap1.height)) {
             var x1 = i % bitmap1.width;
