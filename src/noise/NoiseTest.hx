@@ -88,7 +88,7 @@ class NoiseTest extends TestCase {
                     if (alpha == 255) {
                         assertEquals(expectedByte, colour);
                     } else {
-                        // Compensate for loss caused alpha pre-multiplication.
+                        // Compensate for loss caused by alpha pre-multiplication.
                         tmpBitmap.setPixel32(0, 0, alpha << 24 | expectedByte);
                         var expectedLossyByte = tmpBitmap.getPixel(0, 0);
                         assertEquals(expectedLossyByte, colour);
