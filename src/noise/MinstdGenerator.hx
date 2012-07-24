@@ -10,7 +10,11 @@ class MinstdGenerator {
     var value:Int;
 
     public function new(seed:Int) {
-        this.value = seed;
+        if (seed == 0) {
+            this.value = 1;
+        } else {
+            this.value = seed;
+        }
     }
 
     public function nextValue():Int {
