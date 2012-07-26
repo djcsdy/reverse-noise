@@ -168,4 +168,71 @@ class NoiseTest extends TestCase {
             }
         }
     }
+
+    /** Proves that, when the grayscale flag is set, BitmapDataChannel.RED, .GREEN and .BLUE are ignored, and
+     * so the resulting noise is always grayscale. */
+    public function testChannelOptionsDoNotAffectGrayscaleNoise() {
+        var seed = 899;
+
+        var bitmap1 = new BitmapData(256, 256);
+        var bitmap2 = new BitmapData(256, 256);
+        var bitmap3 = new BitmapData(256, 256);
+        var bitmap4 = new BitmapData(256, 256);
+
+        bitmap1.noise(seed, 0, 255, BitmapDataChannel.RED, true);
+        bitmap2.noise(seed, 0, 255, BitmapDataChannel.GREEN, true);
+        bitmap3.noise(seed, 0, 255, BitmapDataChannel.BLUE, true);
+        bitmap4.noise(seed, 0, 255, 0, true);
+
+        for (y in 0...bitmap1.height) {
+            for (x in 0...bitmap1.width) {
+                assertEquals(bitmap1.getPixel(x, y), bitmap2.getPixel(x, y));
+                assertEquals(bitmap1.getPixel(x, y), bitmap3.getPixel(x, y));
+                assertEquals(bitmap1.getPixel(x, y), bitmap4.getPixel(x, y));
+            }
+        }
+    }
+
+    /** Proves that grayscale noise with no alpha contains identical noise values to single-channel noise. */
+    public function testOneByteOfNoiseIsFetchedForGrayscaleWithNoAlpha() {
+        var seed = 7893;
+
+        var blueBitmap = new BitmapData(256, 256);
+        var grayBitmap = new BitmapData(256, 256);
+
+        blueBitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE, false);
+        grayBitmap.noise(seed, 0, 255, BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, true);
+
+        for (y in 0...blueBitmap.height) {
+            for (x in 0...blueBitmap.width) {
+                var bluePixel = blueBitmap.getPixel(x, y);
+                var grayPixel = grayBitmap.getPixel(x, y);
+                assertEquals(bluePixel, grayPixel & 0xff);
+                assertEquals(bluePixel, grayPixel >> 8 & 0xff);
+                assertEquals(bluePixel, grayPixel >> 16 & 0xff);
+            }
+        }
+    }
+
+    /** Proves that grayscale noise with alpha contains identical noise values to single-channel noise with alpha. */
+    public function testGrayscaleNoiseIsFetchedForLuminanceThenAlpha() {
+        var seed = 23890;
+
+        var blueBitmap = new BitmapData(256, 256);
+        var grayBitmap = new BitmapData(256, 256);
+
+        blueBitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE | BitmapDataChannel.ALPHA, false);
+        grayBitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE | BitmapDataChannel.ALPHA, true);
+
+        for (y in 0...blueBitmap.height) {
+            for (x in 0...grayBitmap.width) {
+                var bluePixel = blueBitmap.getPixel32(x, y);
+                var grayPixel = grayBitmap.getPixel32(x, y);
+                assertEquals(bluePixel & 0xff, grayPixel & 0xff);
+                assertEquals(bluePixel & 0xff, grayPixel >> 8 & 0xff);
+                assertEquals(bluePixel & 0xff, grayPixel >> 16 & 0xff);
+                assertEquals(grayPixel & 0xff000000, grayPixel & 0xff000000);
+            }
+        }
+    }
 }
