@@ -48,11 +48,17 @@ class NoiseTest extends TestCase {
         bitmap1.noise(0);
         bitmap2.noise(1);
 
+        bitmap1.lock();
+        bitmap2.lock();
+
         for (y in 0...bitmap1.height) {
             for (x in 0...bitmap1.width) {
                 assertEquals(bitmap1.getPixel(x, y), bitmap2.getPixel(x, y));
             }
         }
+
+        bitmap1.unlock();
+        bitmap2.unlock();
     }
 
    /* Proves that Flash generates noise one pixel at a time, from left-to-right, top-to-bottom. */
@@ -63,6 +69,9 @@ class NoiseTest extends TestCase {
         bitmap1.noise(1);
         bitmap2.noise(1);
 
+        bitmap1.lock();
+        bitmap2.lock();
+
         for (i in 0...(bitmap1.width*bitmap1.height)) {
             var x1 = i % bitmap1.width;
             var y1 = Std.int(i / bitmap1.width);
@@ -72,6 +81,9 @@ class NoiseTest extends TestCase {
 
             assertEquals(bitmap1.getPixel(x1, y1), bitmap2.getPixel(x2, y2));
         }
+
+        bitmap1.unlock();
+        bitmap2.unlock();
     }
 
     /** Proves that Flash generates noise as follows:
@@ -94,6 +106,7 @@ class NoiseTest extends TestCase {
             bitmaps.push(bitmap);
             var channelOptions = i + 1;
             bitmap.noise(4, 0, 255, channelOptions);
+            bitmap.lock();
         }
 
         for (byteIndex in 0...(bitmaps[0].width * bitmaps[0].height)) {
@@ -137,6 +150,10 @@ class NoiseTest extends TestCase {
                 }
             }
         }
+
+        for (bitmap in bitmaps) {
+            bitmap.unlock();
+        }
     }
 
     /** Proves that the Flash noise generator is a MINSTD pseudo-random number generator.
@@ -150,12 +167,16 @@ class NoiseTest extends TestCase {
         var bitmap = new BitmapData(256, 256);
         bitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE);
 
+        bitmap.lock();
+
         for (y in 0...bitmap.height) {
             for (x in 0...bitmap.width) {
                 var expected = generator.nextValue() & 255;
                 assertEquals(expected, bitmap.getPixel(x, y));
             }
         }
+
+        bitmap.unlock();
     }
 
     /** Proves that noise from the PRNG is modulo-reduced to the requested range. */
@@ -172,12 +193,16 @@ class NoiseTest extends TestCase {
             bitmap.noise(seed, params.low, params.high, BitmapDataChannel.BLUE);
             var generator = new MinstdGenerator(seed);
 
+            bitmap.lock();
+
             for (y in 0...bitmap.height) {
                 for (x in 0...bitmap.width) {
                     var expected = params.low + generator.nextValue() % (params.high-params.low+1);
                     assertEquals(expected, bitmap.getPixel(x, y));
                 }
             }
+
+            bitmap.unlock();
         }
     }
 
@@ -196,6 +221,11 @@ class NoiseTest extends TestCase {
         bitmap3.noise(seed, 0, 255, BitmapDataChannel.BLUE, true);
         bitmap4.noise(seed, 0, 255, 0, true);
 
+        bitmap1.lock();
+        bitmap2.lock();
+        bitmap3.lock();
+        bitmap4.lock();
+
         for (y in 0...bitmap1.height) {
             for (x in 0...bitmap1.width) {
                 assertEquals(bitmap1.getPixel(x, y), bitmap2.getPixel(x, y));
@@ -203,6 +233,11 @@ class NoiseTest extends TestCase {
                 assertEquals(bitmap1.getPixel(x, y), bitmap4.getPixel(x, y));
             }
         }
+
+        bitmap1.unlock();
+        bitmap2.unlock();
+        bitmap3.unlock();
+        bitmap4.unlock();
     }
 
     /** Proves that grayscale noise with no alpha contains identical noise values to single-channel noise. */
@@ -215,6 +250,9 @@ class NoiseTest extends TestCase {
         blueBitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE, false);
         grayBitmap.noise(seed, 0, 255, BitmapDataChannel.RED | BitmapDataChannel.GREEN | BitmapDataChannel.BLUE, true);
 
+        blueBitmap.lock();
+        grayBitmap.lock();
+
         for (y in 0...blueBitmap.height) {
             for (x in 0...blueBitmap.width) {
                 var bluePixel = blueBitmap.getPixel(x, y);
@@ -224,6 +262,9 @@ class NoiseTest extends TestCase {
                 assertEquals(bluePixel, grayPixel >> 16 & 0xff);
             }
         }
+
+        blueBitmap.unlock();
+        grayBitmap.unlock();
     }
 
     /** Proves that grayscale noise with alpha contains identical noise values to single-channel noise with alpha. */
@@ -236,6 +277,9 @@ class NoiseTest extends TestCase {
         blueBitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE | BitmapDataChannel.ALPHA, false);
         grayBitmap.noise(seed, 0, 255, BitmapDataChannel.BLUE | BitmapDataChannel.ALPHA, true);
 
+        blueBitmap.lock();
+        grayBitmap.lock();
+
         for (y in 0...blueBitmap.height) {
             for (x in 0...grayBitmap.width) {
                 var bluePixel = blueBitmap.getPixel32(x, y);
@@ -246,5 +290,8 @@ class NoiseTest extends TestCase {
                 assertEquals(grayPixel & 0xff000000, grayPixel & 0xff000000);
             }
         }
+
+        blueBitmap.unlock();
+        grayBitmap.unlock();
     }
 }
