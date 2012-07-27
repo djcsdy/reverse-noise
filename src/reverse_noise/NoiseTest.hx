@@ -158,7 +158,7 @@ class NoiseTest extends TestCase {
 
     /** Proves that the Flash noise generator is a MINSTD pseudo-random number generator.
      *
-     * An example implementation of this generator is std::minstd_rand0 from the C++ standard library. */
+     * See: reverse_noise.MinstdGenerator. */
     public function testNoiseGeneratorIsMinstd() {
         var seed = 38;
 

@@ -2,7 +2,11 @@ package reverse_noise;
 
 /** A MINSTD pseudo-random number generator.
  *
- * This is equivalent to std::minstd_rand0 from the C++ standard library. **/
+ * This generates a pseudo-random number sequence equivalent to std::minstd_rand0 from the C++ standard library, which
+ * is the generator that Flash uses to generate noise for BitmapData.noise().
+ *
+ * MINSTD was originally suggested in "A pseudo-random number generator for the System/360", P.A. Lewis, A.S. Goodman,
+ * J.M. Miller, IBM Systems Journal, Vol. 8, No. 2, 1969, pp. 136-146 */
 class MinstdGenerator {
     static inline var a = 16807;
     static inline var m = (1 << 31) - 1;
