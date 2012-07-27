@@ -15,6 +15,18 @@ class NoiseTest extends TestCase {
         }
 #end
 
+#if js
+        {
+            var console = untyped js.Lib.window.console;
+            var log = if (console == null) null else console.log;
+            if (log != null) {
+                TestRunner.print = function(value) {
+                    console.log("%s", value);
+                }
+            }
+        }
+#end
+
         var testRunner = new TestRunner();
         testRunner.add(new NoiseTest());
         testRunner.run();
